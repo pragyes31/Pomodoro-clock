@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Pomodoro Clock</title>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="src/style.css">
+</head>
+
+
+<body>
+	<div id="outer-box">
+		<div id="pomodoro-clock">
+			<h1 id="heading">Pomodoro Clock</h1>
+			<div id="timers-length">
+				<div id="break-length">
+					<h2 class="lengths-heading">Break Length</h2>
+					<div class="change-length" id="Break">
+						<!-- <input type="image" class="minus" alt="minus sign" src="https://goo.gl/KKjzq3"/> -->
+						<input type="image" id="break-minus" class="minus" alt="minus sign" src="https://goo.gl/KKjzq3" />
+						<h3 class="timer-length">2</h3>
+						<!-- <input type="image" class="plus" alt="plus sign" src="https://goo.gl/2SzQYU" /> -->
+						<input type="image" id="break-plus" class="plus" alt="plus sign" src="https://goo.gl/2SzQYU" />
+					</div>
+				</div>
+				<div id="session-length">
+					<h2 class="lengths-heading">Session Length</h2>
+					<div class="change-length" id="Session">
+						<input type="image" id="session-minus" class="session-minus minus" alt="minus sign" src="https://goo.gl/KKjzq3" />
+						<!-- <input type="image" class="minus" alt="minus sign" src="https://goo.gl/KKjzq3" />						 -->
+						<h3 class="timer-length">1</h3>
+						<input type="image" class="plus" alt="plus sign" src="https://goo.gl/2SzQYU" />
+						<!-- <input type="image" class="plus" alt="plus sign" src="https://goo.gl/2SzQYU" />					</div> -->
+					</div>
+				</div>
+			</div>
+			<div id="countdown-timer">
+				<h2 id="current-clock-heading">Session</h2>
+				<div class="current-clock">1:00</div>
+			</div>
+			<div class="play-pause">
+				<button id="play"></button>
+				<div id="pause">||</div>
+				<button id="reset">Reset</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="src/index.js"></script>
+	<div>Icons made by
+		<a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from
+		<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by
+		<a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+	</div>
+</body>
+
+</html>
