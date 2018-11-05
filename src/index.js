@@ -17,7 +17,7 @@ function createPomodoroClock() {
   const breakLengthValueNode = document.querySelector(
     "#break-length .timer-length"
   );
-  const timeLeft = document.querySelector(".current-clock");
+  let timeLeft = document.querySelector(".current-clock");
   const currentClockHeading = document.querySelector("#current-clock-heading");
   const pomodoroClock = {
     getTimerLength: timerType => {
@@ -32,6 +32,8 @@ function createPomodoroClock() {
       );
       if (pomodoroClock.getTimerLength(timerType) >= 60) return;
       timerLengthNode.innerHTML = pomodoroClock.getTimerLength(timerType) + 1;
+      if (timerType === "Session")
+        timeLeft.innerHTML = `${timerLengthNode.innerHTML}:00`;
     },
     subtractOne: signBtnId => {
       console.log(signBtnId);
@@ -41,6 +43,8 @@ function createPomodoroClock() {
       );
       if (pomodoroClock.getTimerLength(timerType) <= 1) return;
       timerLengthNode.innerHTML = pomodoroClock.getTimerLength(timerType) - 1;
+      if (timerType === "Session")
+        timeLeft.innerHTML = `${timerLengthNode.innerHTML}:00`;
     },
     displayTimeLeft: seconds => {
       let minutes = Math.floor(seconds / 60);
@@ -62,12 +66,23 @@ function createPomodoroClock() {
       //console.log(then - now);
       let timeLeft = () => {
         let secondsLeft = Math.round((then - Date.now()) / 1000);
-        if (secondsLeft <= 0) {
+        if (secondsLeft < 1) {
           clearInterval(countdown);
+          if (currentClock === "Session") {
+            currentClockHeading.innerHTML = "Break";
+            pomodoroClock.timer(currentClockHeading.innerHTML);
+          }
+          if (currentClock === "Break") {
+            currentClockHeading.innerHTML = "Session";
+            pomodoroClock.timer(currentClockHeading.innerHTML);
+          }
         }
         pomodoroClock.displayTimeLeft(secondsLeft);
       };
       playBtn.disabled = true;
+      minusBtns.forEach(minusBtn => (minusBtn.disabled = true));
+      plusBtns.forEach(plusBtn => (plusBtn.disabled = true));
+
       let countdown = setInterval(timeLeft, 1000);
     }
   };
