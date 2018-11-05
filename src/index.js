@@ -80,6 +80,9 @@ function createPomodoroClock() {
         pomodoroClock.displayTimeLeft(secondsLeft);
       };
       playBtn.disabled = true;
+      minusBtns.forEach(minusBtn => (minusBtn.disabled = true));
+      plusBtns.forEach(plusBtn => (plusBtn.disabled = true));
+
       let countdown = setInterval(timeLeft, 1000);
     }
   };
