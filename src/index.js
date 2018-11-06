@@ -11,6 +11,8 @@ function createPomodoroClock() {
   const minusBtns = document.querySelectorAll(".minus");
   const plusBtns = document.querySelectorAll(".plus");
   const playBtn = document.querySelector("#play");
+  const puaseBtn = document.querySelector("#pause");
+  const resetBtn = document.querySelector("#reset");
   const sessionLengthValueNode = document.querySelector(
     "#session-length .timer-length"
   );
@@ -84,6 +86,12 @@ function createPomodoroClock() {
       plusBtns.forEach(plusBtn => (plusBtn.disabled = true));
 
       let countdown = setInterval(timeLeft, 1000);
+    },
+    pauseTimer: () => {
+      clearInterval(countdown);
+    },
+    resetClock: () => {
+      console.log("bud bud");
     }
   };
   plusBtns.forEach(plusBtn =>
@@ -97,6 +105,8 @@ function createPomodoroClock() {
   playBtn.addEventListener("click", e =>
     pomodoroClock.timer(currentClockHeading.innerHTML)
   );
+  puaseBtn.addEventListener("click", e => pomodoroClock.pauseTimer);
+  resetBtn.addEventListener("click", e => pomodoroClock.resetClock);
   return pomodoroClock;
 }
 
