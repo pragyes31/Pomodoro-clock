@@ -61,6 +61,7 @@
   font-family: Impact, Charcoal, sans-serif;
   font-size: 25px;
   letter-spacing: 5px;
+  display: flex;
 }
 
 .play-pause {
