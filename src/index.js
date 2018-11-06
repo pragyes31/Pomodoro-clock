@@ -8,24 +8,24 @@ function log(...args) {
 const minsLeft = document.querySelector("#minutes-left");
 const secsLeft = document.querySelector("#seconds-left");
 const timeLeft = document.querySelector(".current-clock");
-console.log(timeLeft.innerHTML);
+const sessionLengthValueNode = document.querySelector(
+  "#session-length .timer-length"
+);
 function createPomodoroClock() {
   const minusBtns = document.querySelectorAll(".minus");
   const plusBtns = document.querySelectorAll(".plus");
   const playBtn = document.querySelector("#play");
   const puaseBtn = document.querySelector("#pause");
   const resetBtn = document.querySelector("#reset");
-  const sessionLengthValueNode = document.querySelector(
-    "#session-length .timer-length"
-  );
+
   const breakLengthValueNode = document.querySelector(
     "#break-length .timer-length"
   );
   let timeLeft = document.querySelector(".current-clock");
   const currentClockHeading = document.querySelector("#current-clock-heading");
   const pomodoroClock = {
-    remainderMinutes: "",
-    remainderSeconds: "",
+    remainingMinutes: minsLeft.innerHTML,
+    remainingSeconds: 0,
     countdown: "",
     getTimerLength: timerType => {
       return parseFloat(
@@ -54,27 +54,24 @@ function createPomodoroClock() {
         timeLeft.innerHTML = `${timerLengthNode.innerHTML}:00`;
     },
     displayTimeLeft: seconds => {
-      pomodoroClock.remainderMinutes = Math.floor(seconds / 60);
-      pomodoroClock.remainderSeconds = seconds % 60;
-      let display = `${pomodoroClock.remainderMinutes}:${
-        pomodoroClock.remainderSeconds < 10 ? 0 : ""
-      }${pomodoroClock.remainderSeconds}`;
+      pomodoroClock.remainingMinutes = Math.floor(seconds / 60);
+      pomodoroClock.remainingSeconds = seconds % 60;
+      let display = `${pomodoroClock.remainingMinutes}:${
+        pomodoroClock.remainingSeconds < 10 ? 0 : ""
+      }${pomodoroClock.remainingSeconds}`;
       timeLeft.innerHTML = display;
-      //console.log({ remainderMinutes, remainderSeconds });
+      //console.log({ remainingMinutes, remainingSeconds });
     },
-    timer: currentClock => {
-      let timerValue =
-        currentClock === "Session"
-          ? sessionLengthValueNode.innerHTML
-          : breakLengthValueNode.innerHTML;
-      let seconds = timerValue * 60;
+    timer: (currentClock, remainingMinutes, remainingSeconds) => {
+      let totalSecondsLeft = remainingMinutes * 60 + remainingSeconds;
+      let seconds = totalSecondsLeft;
       let now = Date.now();
       let then = now + seconds * 1000;
       //console.log(then - now);
       let timeLeft = () => {
         let secondsLeft = Math.round((then - Date.now()) / 1000);
         if (secondsLeft < 1) {
-          clearInterval(pomodoroCLock.countdown);
+          clearInterval(pomodoroClock.countdown);
           if (currentClock === "Session") {
             currentClockHeading.innerHTML = "Break";
             pomodoroClock.timer(currentClockHeading.innerHTML);
@@ -94,20 +91,28 @@ function createPomodoroClock() {
     },
     pauseTimer: () => {
       console.log(
-        pomodoroClock.remainderMinutes,
-        pomodoroClock.remainderSeconds
+        pomodoroClock.remainingMinutes,
+        pomodoroClock.remainingSeconds
       );
       clearInterval(pomodoroClock.countdown);
+      console.log(
+        pomodoroClock.remainingMinutes,
+        pomodoroClock.remainingSeconds
+      );
       playBtn.disabled = false;
     },
     resetClock: () => {
       console.log("resetTimer triggered");
-      minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
-      plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
+      // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
+      // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
+      minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
+      console.log(`minsLeft : ${minsLeft.innerHTML}`);
+      secsLeft.innerHTML = "00";
+      console.log(`secsLeft : ${secsLeft.innerHTML}`);
+      clearInterval(pomodoroClock.countdown);
     }
   };
-  minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
-  secsLeft.innerHTML = "00";
+
   plusBtns.forEach(plusBtn =>
     plusBtn.addEventListener("click", e => pomodoroClock.addOne(e.target.id))
   );
@@ -117,11 +122,16 @@ function createPomodoroClock() {
     )
   );
   playBtn.addEventListener("click", e =>
-    pomodoroClock.timer(currentClockHeading.innerHTML)
+    pomodoroClock.timer(
+      currentClockHeading.innerHTML,
+      pomodoroClock.remainingMinutes,
+      pomodoroClock.remainingSeconds
+    )
   );
   puaseBtn.addEventListener("click", e => pomodoroClock.pauseTimer());
   resetBtn.addEventListener("click", e => pomodoroClock.resetClock());
   return pomodoroClock;
 }
-
+minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
+secsLeft.innerHTML = "00";
 const pomodoroClock = createPomodoroClock();
