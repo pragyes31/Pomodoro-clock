@@ -16,7 +16,6 @@ function createPomodoroClock() {
   const playBtn = document.querySelector("#play");
   const puaseBtn = document.querySelector("#pause");
   const resetBtn = document.querySelector("#reset");
-
   const breakLengthValueNode = document.querySelector(
     "#break-length .timer-length"
   );
@@ -39,6 +38,7 @@ function createPomodoroClock() {
       timerLengthNode.innerHTML = pomodoroClock.getTimerLength(timerType) + 1;
       if (timerType === "Session")
         minsLeft.innerHTML = `${timerLengthNode.innerHTML}`;
+      pomodoroClock.remainingMinutes = minsLeft.innerHTML;
     },
     subtractOne: signBtnId => {
       console.log(signBtnId);
@@ -50,6 +50,7 @@ function createPomodoroClock() {
       timerLengthNode.innerHTML = pomodoroClock.getTimerLength(timerType) - 1;
       if (timerType === "Session")
         minsLeft.innerHTML = `${timerLengthNode.innerHTML}`;
+      pomodoroClock.remainingMinutes = minsLeft.innerHTML;
     },
     displayTimeLeft: seconds => {
       pomodoroClock.remainingMinutes = Math.floor(seconds / 60);
@@ -64,6 +65,15 @@ function createPomodoroClock() {
 
       //console.log({ remainingMinutes, remainingSeconds });
     },
+    switchTimer: timerToSwitchTo => {
+      currentClockHeading.innerHTML = timerToSwitchTo;
+      pomodoroClock.remainingSeconds = 0;
+      pomodoroClock.timer(
+        breakLengthValueNode.innerHTML,
+        pomodoroClock.remainingMinutes,
+        pomodoroClock.remainingSeconds
+      );
+    },
     timer: (currentClock, remainingMinutes, remainingSeconds) => {
       let totalSecondsLeft = remainingMinutes * 60 + remainingSeconds;
       let seconds = totalSecondsLeft;
@@ -75,12 +85,15 @@ function createPomodoroClock() {
         if (secondsLeft < 1) {
           clearInterval(pomodoroClock.countdown);
           if (currentClock === "Session") {
-            currentClockHeading.innerHTML = "Break";
-            pomodoroClock.timer(currentClockHeading.innerHTML);
-          }
-          if (currentClock === "Break") {
-            currentClockHeading.innerHTML = "Session";
-            pomodoroClock.timer(currentClockHeading.innerHTML);
+            console.log("enter break");
+            pomodoroClock.remainingMinutes = breakLengthValueNode.innerHTML;
+            pomodoroClock.switchTimer("Break");
+          } else if (currentClock === "Break") {
+            console.log("enter session ");
+            pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
+            pomodoroClock.switchTimer("Session");
+          } else {
+            console.log("none of the above");
           }
         }
         pomodoroClock.displayTimeLeft(secondsLeft);
@@ -107,11 +120,15 @@ function createPomodoroClock() {
       console.log("resetTimer triggered");
       // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
       // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
+      sessionLengthValueNode.innerHTML = 1;
+      breakLengthValueNode.innerHTML = 1;
       minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
-      console.log(`minsLeft : ${minsLeft.innerHTML}`);
+      pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
+      //console.log(`minsLeft : ${minsLeft.innerHTML}`);
       secsLeft.innerHTML = "00";
-      console.log(`secsLeft : ${secsLeft.innerHTML}`);
+      //console.log(`secsLeft : ${secsLeft.innerHTML}`);
       clearInterval(pomodoroClock.countdown);
+      playBtn.disabled = false;
     }
   };
 
