@@ -87,11 +87,26 @@ function createPomodoroClock() {
           if (currentClock === "Session") {
             console.log("enter break");
             pomodoroClock.remainingMinutes = breakLengthValueNode.innerHTML;
-            pomodoroClock.switchTimer("Break");
+            pomodoroClock.remainingSeconds = 0;
+            currentClockHeading.innerHTML = "Break";
+            console.log(currentClockHeading.innerHTML);
+            pomodoroClock.timer(
+              breakLengthValueNode.innerHTML,
+              pomodoroClock.remainingMinutes,
+              pomodoroClock.remainingSeconds
+            );
+            //pomodoroClock.switchTimer("Break");
           } else if (currentClock === "Break") {
-            console.log("enter session ");
+            console.log("enter session");
             pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
-            pomodoroClock.switchTimer("Session");
+            pomodoroClock.remainingSeconds = 0;
+            currentClockHeading.innerHTML = "Session";
+            pomodoroClock.timer(
+              breakLengthValueNode.innerHTML,
+              pomodoroClock.remainingMinutes,
+              pomodoroClock.remainingSeconds
+            );
+            //pomodoroClock.switchTimer("Session");
           } else {
             console.log("none of the above");
           }
@@ -117,18 +132,18 @@ function createPomodoroClock() {
       playBtn.disabled = false;
     },
     resetClock: () => {
-      console.log("resetTimer triggered");
-      // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
-      // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
-      sessionLengthValueNode.innerHTML = 1;
-      breakLengthValueNode.innerHTML = 1;
-      minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
-      pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
-      //console.log(`minsLeft : ${minsLeft.innerHTML}`);
-      secsLeft.innerHTML = "00";
-      //console.log(`secsLeft : ${secsLeft.innerHTML}`);
-      clearInterval(pomodoroClock.countdown);
-      playBtn.disabled = false;
+      // console.log("resetTimer triggered");
+      // // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
+      // // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
+      // sessionLengthValueNode.innerHTML = 1;
+      // breakLengthValueNode.innerHTML = 1;
+      // minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
+      // pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
+      // //console.log(`minsLeft : ${minsLeft.innerHTML}`);
+      // secsLeft.innerHTML = "00";
+      // //console.log(`secsLeft : ${secsLeft.innerHTML}`);
+      // clearInterval(pomodoroClock.countdown);
+      // playBtn.disabled = false;
     }
   };
 
