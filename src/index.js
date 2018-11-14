@@ -23,6 +23,7 @@ function createPomodoroClock() {
   const pomodoroClock = {
     remainingMinutes: minsLeft.innerHTML,
     remainingSeconds: 0,
+    timerSwitchCounter: true,
     countdown: "",
     getTimerLength: timerType => {
       return parseFloat(
@@ -69,44 +70,45 @@ function createPomodoroClock() {
       currentClockHeading.innerHTML = timerToSwitchTo;
       pomodoroClock.remainingSeconds = 0;
       pomodoroClock.timer(
-        breakLengthValueNode.innerHTML,
         pomodoroClock.remainingMinutes,
         pomodoroClock.remainingSeconds
       );
     },
-    timer: (currentClock, remainingMinutes, remainingSeconds) => {
-      let totalSecondsLeft = remainingMinutes * 60 + remainingSeconds;
-      let seconds = totalSecondsLeft;
+    timer: (remainingMinutes, remainingSeconds) => {
+      let totalSeconds = remainingMinutes * 60 + remainingSeconds;
       let now = Date.now();
-      let then = now + seconds * 1000;
+      let then = now + totalSeconds * 1000;
       //console.log(then - now);
       let minsLeft = () => {
         let secondsLeft = Math.round((then - Date.now()) / 1000);
+        console.log(secondsLeft);
         if (secondsLeft < 1) {
           clearInterval(pomodoroClock.countdown);
-          if (currentClock === "Session") {
+          if (pomodoroClock.timerSwitchCounter === false) {
+            pomodoroClock.timerSwitchCounter = true;
+            console.log(pomodoroClock.timerSwitchCounter);
+            console.log("enter session");
+            pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
+            pomodoroClock.remainingSeconds = 0;
+            currentClockHeading.innerHTML = "Session";
+            pomodoroClock.timer(
+              pomodoroClock.remainingMinutes,
+              pomodoroClock.remainingSeconds
+            );
+            //pomodoroClock.switchTimer("Session");
+          } else if (pomodoroClock.timerSwitchCounter) {
+            pomodoroClock.timerSwitchCounter = false;
+            console.log(pomodoroClock.timerSwitchCounter);
             console.log("enter break");
             pomodoroClock.remainingMinutes = breakLengthValueNode.innerHTML;
             pomodoroClock.remainingSeconds = 0;
             currentClockHeading.innerHTML = "Break";
             console.log(currentClockHeading.innerHTML);
             pomodoroClock.timer(
-              breakLengthValueNode.innerHTML,
               pomodoroClock.remainingMinutes,
               pomodoroClock.remainingSeconds
             );
             //pomodoroClock.switchTimer("Break");
-          } else if (currentClock === "Break") {
-            console.log("enter session");
-            pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
-            pomodoroClock.remainingSeconds = 0;
-            currentClockHeading.innerHTML = "Session";
-            pomodoroClock.timer(
-              breakLengthValueNode.innerHTML,
-              pomodoroClock.remainingMinutes,
-              pomodoroClock.remainingSeconds
-            );
-            //pomodoroClock.switchTimer("Session");
           } else {
             console.log("none of the above");
           }
@@ -120,30 +122,22 @@ function createPomodoroClock() {
       pomodoroClock.countdown = setInterval(minsLeft, 1000);
     },
     pauseTimer: () => {
-      console.log(
-        pomodoroClock.remainingMinutes,
-        pomodoroClock.remainingSeconds
-      );
       clearInterval(pomodoroClock.countdown);
-      console.log(
-        pomodoroClock.remainingMinutes,
-        pomodoroClock.remainingSeconds
-      );
       playBtn.disabled = false;
     },
     resetClock: () => {
-      // console.log("resetTimer triggered");
-      // // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
-      // // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
-      // sessionLengthValueNode.innerHTML = 1;
-      // breakLengthValueNode.innerHTML = 1;
-      // minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
-      // pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
-      // //console.log(`minsLeft : ${minsLeft.innerHTML}`);
-      // secsLeft.innerHTML = "00";
-      // //console.log(`secsLeft : ${secsLeft.innerHTML}`);
-      // clearInterval(pomodoroClock.countdown);
-      // playBtn.disabled = false;
+      // minusBtns.forEach(minusBtn => (minusBtn.disabled = false));
+      // plusBtns.forEach(plusBtn => (plusBtn.disabled = false));
+      sessionLengthValueNode.innerHTML = 25;
+      breakLengthValueNode.innerHTML = 10;
+      minsLeft.innerHTML = sessionLengthValueNode.innerHTML;
+      pomodoroClock.remainingMinutes = sessionLengthValueNode.innerHTML;
+      pomodoroClock.remainingSeconds = 0;
+      //console.log(`minsLeft : ${minsLeft.innerHTML}`);
+      secsLeft.innerHTML = "00";
+      //console.log(`secsLeft : ${secsLeft.innerHTML}`);
+      clearInterval(pomodoroClock.countdown);
+      playBtn.disabled = false;
     }
   };
 
@@ -157,7 +151,6 @@ function createPomodoroClock() {
   );
   playBtn.addEventListener("click", e =>
     pomodoroClock.timer(
-      currentClockHeading.innerHTML,
       pomodoroClock.remainingMinutes,
       pomodoroClock.remainingSeconds
     )
